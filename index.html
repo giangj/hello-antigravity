@@ -1,233 +1,632 @@
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Antigravity — AI-First Command Center</title>
+  <title>YouTube — MVP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Ambient Background Orbs -->
-  <div class="bg-ambient">
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
-    <div class="grid-overlay"></div>
-  </div>
+  <!-- Top Masthead -->
+  <header class="masthead">
+    <div class="masthead-left">
+      <button id="sidebarToggleBtn" class="icon-btn" aria-label="Menu điều hướng" title="Menu">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+          <path d="M21 6H3V5h18v1zm0 5H3v1h18v-1zm0 6H3v1h18v-1z" />
+        </svg>
+      </button>
 
-  <!-- Top Navigation -->
-  <header class="navbar">
-    <div class="nav-container">
-      <a href="#" class="brand">
-        <span class="brand-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L2 19.5H7.5L12 11.5L16.5 19.5H22L12 2Z" fill="url(#logoGrad)" />
-            <circle cx="12" cy="17.5" r="2.2" fill="#38BDF8" />
-            <defs>
-              <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="20" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#38BDF8" />
-                <stop offset="0.5" stop-color="#818CF8" />
-                <stop offset="1" stop-color="#C084FC" />
-              </linearGradient>
-            </defs>
+      <a href="#home" id="brandLogo" class="brand-logo" title="Trang chủ YouTube">
+        <span class="yt-icon" aria-hidden="true">
+          <svg viewBox="0 0 28 20" width="29" height="20">
+            <rect width="28" height="20" rx="5.5" fill="#FF0033" />
+            <polygon points="11.2,5.5 19.2,10 11.2,14.5" fill="#FFFFFF" />
           </svg>
         </span>
-        <span class="brand-name">Antigravity</span>
-        <span class="brand-badge">2.0</span>
+        <span class="yt-wordmark">YouTube</span>
+        <span class="yt-country">VN</span>
+      </a>
+    </div>
+
+    <div class="masthead-center">
+      <div class="search-wrapper">
+        <form id="searchForm" class="search-form" autocomplete="off">
+          <div class="search-input-box">
+            <span class="search-focus-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M20.87 20.17l-5.59-5.59C16.35 13.35 17 11.75 17 10c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.75 0 3.35-.65 4.58-1.71l5.59 5.59.7-.71zM10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
+              </svg>
+            </span>
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Tìm kiếm"
+              aria-label="Tìm kiếm"
+            />
+            <button id="searchClearBtn" type="button" class="search-clear-btn hidden" title="Xóa tìm kiếm" aria-label="Xóa tìm kiếm">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+              </svg>
+            </button>
+          </div>
+          <button type="submit" class="search-submit-btn" title="Tìm kiếm" aria-label="Tìm kiếm">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M20.87 20.17l-5.59-5.59C16.35 13.35 17 11.75 17 10c0-3.87-3.13-7-7-7s-7 3.13-7 7 3.13 7 7 7c1.75 0 3.35-.65 4.58-1.71l5.59 5.59.7-.71zM10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z" />
+            </svg>
+          </button>
+        </form>
+        <div id="searchSuggestions" class="search-suggestions hidden"></div>
+      </div>
+
+      <button id="voiceSearchBtn" class="icon-btn voice-btn" title="Tìm kiếm bằng giọng nói" aria-label="Tìm kiếm bằng giọng nói">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15a.998.998 0 00-.98-.85c-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08a6.993 6.993 0 005.91-5.78c.1-.6-.39-1.14-1-1.14z" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="masthead-right">
+      <a
+        href="https://giangj.github.io/hello-antigravity/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="live-site-pill"
+        title="Mở website chính thức trên GitHub Pages"
+      >
+        <span class="live-site-dot"></span>
+        <span class="live-site-label">giangj.github.io</span>
       </a>
 
-      <nav class="nav-links">
-        <a href="#workspace" class="nav-link active">Command Center</a>
-        <a href="#agents" class="nav-link">Subagents</a>
-        <a href="#metrics" class="nav-link">Token Telemetry</a>
-      </nav>
+      <button id="createBtn" class="create-pill-btn" title="Tạo hoặc tải video lên">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+        </svg>
+        <span>Tạo</span>
+      </button>
 
-      <div class="nav-actions">
-        <div class="status-pill">
-          <span class="pulse-dot"></span>
-          <span>Sandbox Ready</span>
-        </div>
-        <button id="themeBtn" class="btn-icon" title="Đổi hiệu ứng ánh sáng">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="5"></circle>
-            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+      <button id="themeToggleBtn" class="icon-btn" title="Chuyển giao diện Sáng / Tối" aria-label="Đổi giao diện">
+        <svg id="themeIconDark" viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+          <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37a.996.996 0 00-1.41 0 .996.996 0 000 1.41l1.06 1.06c.39.39 1.03.39 1.41 0a.996.996 0 000-1.41l-1.06-1.06zm1.06-10.96a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36a.996.996 0 000-1.41.996.996 0 00-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z" />
+        </svg>
+        <svg id="themeIconLight" class="hidden" viewBox="0 0 24 24" width="21" height="21" fill="currentColor">
+          <path d="M12 3a9 9 0 109 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 01-4.4 2.26 5.403 5.403 0 01-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" />
+        </svg>
+      </button>
+
+      <div class="popover-anchor">
+        <button id="notifBtn" class="icon-btn" title="Thông báo" aria-label="Thông báo">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
           </svg>
+          <span id="notifBadge" class="notif-badge">3</span>
         </button>
-        <a href="https://github.com/giangj/hello-antigravity" target="_blank" class="btn-primary-sm">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-          </svg>
-          <span>GitHub Repo</span>
-        </a>
+        <div id="notifPopover" class="popover-panel hidden">
+          <div class="popover-header">
+            <span>Thông báo</span>
+            <button id="clearNotifBtn" class="text-btn-sm">Đánh dấu đã đọc</button>
+          </div>
+          <div id="notifList" class="notif-list"></div>
+        </div>
+      </div>
+
+      <div class="popover-anchor">
+        <button id="avatarBtn" class="avatar-btn" title="Tài khoản giangj" aria-label="Tài khoản">G</button>
+        <div id="userPopover" class="popover-panel user-popover hidden">
+          <div class="user-card-header">
+            <div class="avatar-lg">G</div>
+            <div>
+              <div class="user-name">giangj</div>
+              <div class="user-handle">@giangj • Antigravity Studio</div>
+            </div>
+          </div>
+          <div class="popover-divider"></div>
+          <button class="popover-item" data-nav="home">Trang chủ</button>
+          <button class="popover-item" data-nav="liked">Video đã thích</button>
+          <button class="popover-item" data-nav="watch-later">Danh sách xem sau</button>
+          <button class="popover-item" id="popoverThemeBtn">Đổi giao diện Sáng / Tối</button>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="main-content">
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-tag">
-        <span class="sparkle">✦</span>
-        <span>Built by Antigravity for <strong>giangj</strong></span>
-      </div>
-      <h1 class="hero-title">
-        Điều phối <span class="gradient-text">Multi-Agent</span><br />
-        trong kỷ nguyên AI-First
-      </h1>
-      <p class="hero-subtitle">
-        Trung tâm giám sát tác vụ tự hành, quản lý ngữ cảnh thông minh và thử nghiệm câu lệnh trực tiếp ngay trên trình duyệt.
-      </p>
+  <!-- Sidebar Backdrop (Mobile / Watch overlay) -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop hidden"></div>
 
-      <div class="hero-cta">
-        <button id="runDemoBtn" class="btn-glow">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  <!-- App Shell -->
+  <div id="appShell" class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside id="sidebar" class="sidebar" aria-label="Thanh điều hướng">
+      <div class="sidebar-scroll">
+        <nav class="nav-section">
+          <button class="sidebar-item active" data-nav="home">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z" />
+            </svg>
+            <span>Trang chủ</span>
+          </button>
+          <button class="sidebar-item" data-nav="shorts">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M17.77 10.32l-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25zM10 14.65v-5.3L15 12l-5 2.65z" />
+            </svg>
+            <span>Shorts</span>
+          </button>
+          <button class="sidebar-item" data-nav="subscriptions">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M10 18v-6l5 3-5 3zm7-15H7v1h10V3zm3 3H4v1h16V6zm2 3H2v12h20V9zM3 10h18v10H3V10z" />
+            </svg>
+            <span>Kênh đăng ký</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-divider hide-mini"></div>
+
+        <nav class="nav-section">
+          <div class="sidebar-section-title hide-mini">Bạn</div>
+          <button class="sidebar-item" data-nav="history">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M14.97 16.95L10 13.87V7h2v5.76l4.03 2.49-1.06 1.7zM12 3c-4.96 0-9 4.04-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z" />
+            </svg>
+            <span>Video đã xem</span>
+          </button>
+          <button class="sidebar-item" data-nav="watch-later">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z" />
+            </svg>
+            <span>Xem sau</span>
+          </button>
+          <button class="sidebar-item" data-nav="liked">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+            </svg>
+            <span>Video đã thích</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-divider hide-mini"></div>
+
+        <nav class="nav-section hide-mini">
+          <div class="sidebar-section-title">Kênh đăng ký</div>
+          <div id="sidebarChannels" class="sidebar-channels"></div>
+        </nav>
+
+        <div class="sidebar-divider hide-mini"></div>
+
+        <nav class="nav-section hide-mini">
+          <div class="sidebar-section-title">Khám phá</div>
+          <button class="sidebar-item" data-category="Lập trình & AI">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
+            </svg>
+            <span>Lập trình & AI</span>
+          </button>
+          <button class="sidebar-item" data-category="Âm nhạc">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+            </svg>
+            <span>Âm nhạc</span>
+          </button>
+          <button class="sidebar-item" data-category="Trò chơi">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
+            </svg>
+            <span>Trò chơi</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-footer hide-mini">
+          <p>YouTube MVP • Crafted by Antigravity</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Viewport -->
+    <main class="main-viewport">
+      <!-- HOME / FEED VIEW -->
+      <section id="homeView" class="home-view">
+        <!-- Category Chips Bar -->
+        <div class="chips-bar-wrap">
+          <div id="chipsBar" class="chips-bar" role="tablist" aria-label="Danh mục video"></div>
+        </div>
+
+        <!-- Context Banner (for Search / Liked / History / Channel filter) -->
+        <div id="feedStatusBar" class="feed-status-bar hidden">
+          <div class="feed-status-left">
+            <h2 id="feedStatusTitle">Kết quả</h2>
+            <span id="feedStatusSubtitle"></span>
+          </div>
+          <button id="resetFeedBtn" class="pill-btn-secondary">Quay lại Trang chủ</button>
+        </div>
+
+        <!-- Primary Video Grid (Top Row) -->
+        <div id="videoGridTop" class="video-grid"></div>
+
+        <!-- Shorts Shelf -->
+        <section id="shortsShelf" class="shorts-shelf">
+          <div class="shelf-header">
+            <div class="shelf-title-wrap">
+              <span class="shorts-badge-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22">
+                  <path d="M17.77 10.32l-1.2-.5L18 9.06c1.84-.96 2.53-3.23 1.56-5.06s-3.24-2.53-5.07-1.56L6 6.94c-1.29.68-2.07 2.04-2 3.49.07 1.42.93 2.67 2.22 3.25.03.01 1.2.5 1.2.5L6 14.93c-1.83.97-2.53 3.24-1.56 5.07.97 1.83 3.24 2.53 5.07 1.56l8.5-4.5c1.29-.68 2.06-2.04 1.99-3.49-.07-1.42-.94-2.68-2.23-3.25z" fill="#FF0033" />
+                  <polygon points="10,14.65 10,9.35 15,12" fill="#FFFFFF" />
+                </svg>
+              </span>
+              <h2>Shorts</h2>
+            </div>
+            <button id="openAllShortsBtn" class="text-btn-sm">Xem tất cả</button>
+          </div>
+          <div id="shortsShelfGrid" class="shorts-shelf-grid"></div>
+        </section>
+
+        <!-- Secondary Video Grid -->
+        <div id="videoGridBottom" class="video-grid"></div>
+
+        <!-- Empty State -->
+        <div id="emptyFeedState" class="empty-state hidden">
+          <svg viewBox="0 0 24 24" width="56" height="56" fill="currentColor" opacity="0.45">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
           </svg>
-          <span>Chạy mô phỏng Agent</span>
-        </button>
-        <button id="compactBtn" class="btn-glass">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+          <h3>Không tìm thấy video phù hợp</h3>
+          <p>Thử từ khóa khác hoặc quay lại danh sách Trang chủ.</p>
+          <button id="emptyResetBtn" class="pill-btn-primary">Xem tất cả video</button>
+        </div>
+      </section>
+
+      <!-- SHORTS VIEW -->
+      <section id="shortsView" class="shorts-view hidden">
+        <div class="shorts-stage">
+          <div class="shorts-player-card">
+            <canvas id="shortsCanvas" width="405" height="720"></canvas>
+            <div class="shorts-overlay-top">
+              <button id="shortsBackBtn" class="shorts-circle-btn" title="Quay lại">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+              </button>
+              <button id="shortsPlayToggle" class="shorts-circle-btn" title="Phát / Tạm dừng">
+                <svg id="shortsPlayIcon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+              </button>
+            </div>
+            <div class="shorts-overlay-bottom">
+              <div class="shorts-channel-row">
+                <div id="shortsAvatar" class="channel-avatar-sm"></div>
+                <span id="shortsChannelName" class="shorts-channel-name"></span>
+                <button id="shortsSubBtn" class="shorts-sub-btn">Đăng ký</button>
+              </div>
+              <p id="shortsTitle" class="shorts-caption"></p>
+            </div>
+          </div>
+
+          <div class="shorts-side-actions">
+            <button id="shortsLikeBtn" class="shorts-action-btn">
+              <span class="shorts-action-circle">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                  <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+                </svg>
+              </span>
+              <span id="shortsLikeCount">12N</span>
+            </button>
+            <button id="shortsCommentBtn" class="shorts-action-btn">
+              <span class="shorts-action-circle">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                  <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" />
+                </svg>
+              </span>
+              <span id="shortsCommentCount">418</span>
+            </button>
+            <button id="shortsShareBtn" class="shorts-action-btn">
+              <span class="shorts-action-circle">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                  <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
+                </svg>
+              </span>
+              <span>Chia sẻ</span>
+            </button>
+
+            <div class="shorts-nav-arrows">
+              <button id="shortsPrevBtn" class="shorts-circle-btn" title="Short trước">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                  <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+                </svg>
+              </button>
+              <button id="shortsNextBtn" class="shorts-circle-btn" title="Short tiếp theo">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                  <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- WATCH VIEW -->
+      <section id="watchView" class="watch-view hidden">
+        <div id="watchLayout" class="watch-layout">
+          <div class="watch-primary">
+            <!-- Player + Ambient Mode Stage -->
+            <div class="player-stage">
+              <div id="ambientGlow" class="ambient-glow"></div>
+              <div id="playerContainer" class="player-container">
+                <canvas id="playerCanvas" width="1280" height="720"></canvas>
+
+                <!-- Center Play/Pause Ripple Indicator -->
+                <div id="playerCenterFeedback" class="player-center-feedback">
+                  <svg viewBox="0 0 24 24" width="44" height="44" fill="currentColor">
+                    <polygon points="8,5 19,12 8,19" />
+                  </svg>
+                </div>
+
+                <!-- Top Player Overlay (visible on hover / theater) -->
+                <div class="player-top-gradient">
+                  <button id="watchBackBtn" class="player-back-chip" title="Quay lại Trang chủ">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                      <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                    </svg>
+                    <span>Trang chủ</span>
+                  </button>
+                  <span id="playerOverlayTitle" class="player-overlay-title"></span>
+                </div>
+
+                <!-- Bottom Player Controls -->
+                <div class="player-controls-overlay">
+                  <div id="progressTrack" class="player-progress-track">
+                    <div id="progressHoverTooltip" class="progress-hover-tooltip hidden">00:00</div>
+                    <div class="progress-bg"></div>
+                    <div id="progressBuffer" class="progress-buffer"></div>
+                    <div id="progressPlayed" class="progress-played">
+                      <span class="progress-scrubber"></span>
+                    </div>
+                  </div>
+
+                  <div class="player-controls-row">
+                    <div class="controls-left">
+                      <button id="playPauseBtn" class="ctrl-btn" title="Phát / Tạm dừng (Space)" aria-label="Phát hoặc tạm dừng">
+                        <svg id="playIcon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                        <svg id="pauseIcon" class="hidden" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                          <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                        </svg>
+                      </button>
+
+                      <button id="nextVideoBtn" class="ctrl-btn" title="Video tiếp theo" aria-label="Video tiếp theo">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+                        </svg>
+                      </button>
+
+                      <div class="volume-control">
+                        <button id="muteBtn" class="ctrl-btn" title="Tắt tiếng (M)" aria-label="Tắt tiếng">
+                          <svg id="volHighIcon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                          </svg>
+                          <svg id="volMuteIcon" class="hidden" viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+                          </svg>
+                        </button>
+                        <input id="volumeSlider" type="range" min="0" max="100" value="80" class="volume-slider" aria-label="Âm lượng" />
+                      </div>
+
+                      <div class="time-display">
+                        <span id="currentTimeLabel">0:00</span>
+                        <span class="time-sep">/</span>
+                        <span id="durationTimeLabel">0:00</span>
+                      </div>
+                    </div>
+
+                    <div class="controls-right">
+                      <button id="ambientToggleBtn" class="ctrl-pill active" title="Ánh sáng xung quanh (Ambient Mode)">
+                        Ambient
+                      </button>
+
+                      <button id="speedBtn" class="ctrl-pill" title="Tốc độ phát">
+                        1x
+                      </button>
+
+                      <button id="theaterBtn" class="ctrl-btn" title="Chế độ rạp chiếu phim (T)" aria-label="Chế độ rạp chiếu phim">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                          <path d="M19 6H5c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 10H5V8h14v8z" />
+                        </svg>
+                      </button>
+
+                      <button id="fullscreenBtn" class="ctrl-btn" title="Toàn màn hình (F)" aria-label="Toàn màn hình">
+                        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Video Title & Channel Actions -->
+            <h1 id="watchTitle" class="watch-title"></h1>
+
+            <div class="watch-actions-bar">
+              <div class="watch-channel-group">
+                <div id="watchChannelAvatar" class="channel-avatar-md"></div>
+                <div class="watch-channel-meta">
+                  <div class="watch-channel-name-row">
+                    <span id="watchChannelName" class="watch-channel-name"></span>
+                    <span id="watchVerifiedBadge" class="verified-badge" title="Đã xác minh">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zM9.8 17.3l-4.2-4.1L7 11.8l2.8 2.7L17 7.4l1.4 1.4-8.6 8.5z" />
+                      </svg>
+                    </span>
+                  </div>
+                  <div id="watchChannelSubs" class="watch-channel-subs"></div>
+                </div>
+                <button id="subscribeBtn" class="subscribe-btn">Đăng ký</button>
+              </div>
+
+              <div class="watch-action-pills">
+                <div class="like-dislike-group">
+                  <button id="likeBtn" class="action-pill-left" title="Tôi thích video này">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                      <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z" />
+                    </svg>
+                    <span id="likeCountLabel">0</span>
+                  </button>
+                  <span class="pill-divider"></span>
+                  <button id="dislikeBtn" class="action-pill-right" title="Tôi không thích video này" aria-label="Không thích">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                      <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z" />
+                    </svg>
+                  </button>
+                </div>
+
+                <button id="shareBtn" class="action-pill">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M15 5.63L20.66 12 15 18.37V14h-1c-3.96 0-7.14 1-9.75 3.09 1.84-4.07 5.11-6.4 9.89-7.1l.86-.13V5.63M14 3v6C6.22 10.13 3.11 15.33 2 21c2.78-3.97 6.44-6 12-6v6l8-9-8-9z" />
+                  </svg>
+                  <span>Chia sẻ</span>
+                </button>
+
+                <button id="saveBtn" class="action-pill">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M22 13h-4v4h-2v-4h-4v-2h4V7h2v4h4v2zm-8-6H2v1h12V7zM2 12h8v-1H2v1zm0 4h8v-1H2v1z" />
+                  </svg>
+                  <span id="saveBtnText">Lưu</span>
+                </button>
+
+                <button id="downloadBtn" class="action-pill hide-sm">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M17 18v1H6v-1h11zm-.5-6.6l-.7-.7-3.8 3.7V4h-1v10.4l-3.8-3.8-.7.7 5 5 5-4.9z" />
+                  </svg>
+                  <span>Tải xuống</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Expandable Description Box -->
+            <div id="watchDescBox" class="watch-description">
+              <div class="desc-stats-row">
+                <span id="watchViewsDate" class="desc-bold"></span>
+                <span id="watchHashtags" class="desc-tags"></span>
+              </div>
+              <p id="watchDescText" class="desc-body"></p>
+              <div id="watchChapters" class="watch-chapters"></div>
+              <button id="descToggleBtn" class="desc-toggle-btn">...thêm</button>
+            </div>
+
+            <!-- Comments Section -->
+            <section class="comments-section">
+              <div class="comments-header">
+                <h3 id="commentsCountTitle">0 bình luận</h3>
+                <button id="sortCommentsBtn" class="sort-comments-btn">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M21 6H3V5h18v1zm-6 5H3v1h12v-1zm-6 6H3v1h6v-1z" />
+                  </svg>
+                  <span id="sortCommentsLabel">Sắp xếp: Hàng đầu</span>
+                </button>
+              </div>
+
+              <form id="commentForm" class="comment-composer">
+                <div class="avatar-md-user">G</div>
+                <div class="comment-input-wrap">
+                  <input id="commentInput" type="text" placeholder="Viết bình luận..." autocomplete="off" />
+                  <div id="commentActions" class="comment-composer-actions hidden">
+                    <button type="button" id="commentCancelBtn" class="text-btn-sm">Hủy</button>
+                    <button type="submit" id="commentSubmitBtn" class="pill-btn-primary" disabled>Bình luận</button>
+                  </div>
+                </div>
+              </form>
+
+              <div id="commentsList" class="comments-list"></div>
+            </section>
+          </div>
+
+          <!-- Secondary Column: Up Next -->
+          <aside class="watch-secondary">
+            <div class="upnext-header">
+              <div class="upnext-chips">
+                <button class="chip active" data-upnext="all">Tất cả</button>
+                <button class="chip" data-upnext="channel">Cùng kênh</button>
+                <button class="chip" data-upnext="category">Liên quan</button>
+              </div>
+              <label class="autoplay-toggle" title="Tự động phát video tiếp theo">
+                <span>Tự động phát</span>
+                <input id="autoplaySwitch" type="checkbox" checked />
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div id="upNextList" class="upnext-list"></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Voice Search Modal -->
+  <div id="voiceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="voiceModalTitle">
+    <div class="modal-card voice-modal-card">
+      <button id="closeVoiceModal" class="modal-close-btn" aria-label="Đóng">✕</button>
+      <h3 id="voiceModalTitle">Đang nghe...</h3>
+      <p id="voiceHintText" class="modal-sub">Thử nói: "AI Agent", "Lo-fi", "Next.js"...</p>
+      <div class="voice-mic-pulse">
+        <div class="mic-ring"></div>
+        <div class="mic-circle">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="#ffffff">
+            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15a.998.998 0 00-.98-.85c-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08a6.993 6.993 0 005.91-5.78c.1-.6-.39-1.14-1-1.14z" />
           </svg>
-          <span>/compact Ngữ cảnh</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- Bento Grid Workspace -->
-    <section id="workspace" class="bento-grid">
-      <!-- Card 1: Interactive Terminal Agent -->
-      <div class="card card-terminal">
-        <div class="card-header">
-          <div class="window-dots">
-            <span class="dot red"></span>
-            <span class="dot yellow"></span>
-            <span class="dot green"></span>
-          </div>
-          <span class="card-title-mono">agy-sandbox — E:\AI_vin20k\hello-antigravity</span>
-          <span class="badge-live">LIVE</span>
-        </div>
-        <div id="terminalBody" class="terminal-body">
-          <div class="term-line"><span class="prompt">$</span> <span class="cmd">git remote -v</span></div>
-          <div class="term-output">origin  https://github.com/giangj/hello-antigravity.git (fetch)</div>
-          <div class="term-output">origin  https://github.com/giangj/hello-antigravity.git (push)</div>
-          <div class="term-line"><span class="prompt">$</span> <span class="cmd">agy status --agents</span></div>
-          <div class="term-output success">✓ Coordinator Agent: Ready (Gemini Pro 2M Context)</div>
-          <div class="term-output info">● Subagent Pool: 3 workers standing by</div>
-        </div>
-        <div class="terminal-input-row">
-          <span class="prompt">❯</span>
-          <input id="cmdInput" type="text" placeholder="Thử gõ lệnh: help, /compact, build, test, clear..." autocomplete="off" />
-          <button id="sendCmdBtn" class="btn-send">Run</button>
         </div>
       </div>
-
-      <!-- Card 2: Token Telemetry & Context Meter -->
-      <div id="metrics" class="card card-metrics">
-        <div class="card-top">
-          <div>
-            <span class="eyebrow">TELEMETRY</span>
-            <h3 class="card-heading">Context Window Usage</h3>
-          </div>
-          <span id="tokenPercent" class="metric-big">42%</span>
-        </div>
-
-        <div class="progress-track">
-          <div id="tokenBar" class="progress-fill" style="width: 42%"></div>
-        </div>
-        <div class="metric-labels">
-          <span id="tokenCountText">840,000 / 2,000,000 tokens</span>
-          <span class="text-emerald">Tối ưu tốt</span>
-        </div>
-
-        <div class="mini-stats">
-          <div class="mini-stat-box">
-            <span class="stat-label">Window Reset</span>
-            <span id="countdownText" class="stat-val">04:59:12</span>
-          </div>
-          <div class="mini-stat-box">
-            <span class="stat-label">Active Model</span>
-            <span class="stat-val">Gemini Pro</span>
-          </div>
-        </div>
+      <div class="voice-quick-phrases">
+        <button class="chip voice-sample" data-phrase="AI Agent">AI Agent</button>
+        <button class="chip voice-sample" data-phrase="Lo-fi">Lo-fi</button>
+        <button class="chip voice-sample" data-phrase="Lập trình">Lập trình</button>
       </div>
+    </div>
+  </div>
 
-      <!-- Card 3: Subagents Orchestration -->
-      <div id="agents" class="card card-agents">
-        <div class="card-top">
-          <div>
-            <span class="eyebrow">MULTI-THREADING</span>
-            <h3 class="card-heading">Active Subagents</h3>
-          </div>
-          <span class="pill-count">1 Google Account</span>
-        </div>
-
-        <div class="agent-list">
-          <div class="agent-item">
-            <div class="agent-avatar sky">R</div>
-            <div class="agent-info">
-              <div class="agent-name">Research Agent</div>
-              <div class="agent-desc">Quét cấu trúc repository & docs</div>
-            </div>
-            <span class="agent-state done" data-agent="research">Idle</span>
-          </div>
-
-          <div class="agent-item">
-            <div class="agent-avatar purple">U</div>
-            <div class="agent-info">
-              <div class="agent-name">UI Architect</div>
-              <div class="agent-desc">Tạo giao diện HTML/CSS/JS tối ưu</div>
-            </div>
-            <span class="agent-state running" data-agent="ui">Active</span>
-          </div>
-
-          <div class="agent-item">
-            <div class="agent-avatar emerald">T</div>
-            <div class="agent-info">
-              <div class="agent-name">Git & Deploy Agent</div>
-              <div class="agent-desc">Commit & Push lên giangj/hello-antigravity</div>
-            </div>
-            <span class="agent-state done" data-agent="git">Synced</span>
-          </div>
-        </div>
+  <!-- Create / Upload Video Modal (MVP) -->
+  <div id="createModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="createModalTitle">
+    <div class="modal-card create-modal-card">
+      <div class="modal-header">
+        <h3 id="createModalTitle">Tải video mới lên (MVP)</h3>
+        <button id="closeCreateModal" class="modal-close-btn" aria-label="Đóng">✕</button>
       </div>
-
-      <!-- Card 4: Quick Actions / Slash Commands -->
-      <div class="card card-commands">
-        <div class="card-top">
-          <div>
-            <span class="eyebrow">WORKFLOWS</span>
-            <h3 class="card-heading">Slash Commands</h3>
-          </div>
+      <form id="createVideoForm" class="create-form">
+        <label>
+          <span>Tiêu đề video</span>
+          <input id="newVideoTitle" type="text" required placeholder="VD: Xây dựng AI Agent từ A-Z trong 15 phút" />
+        </label>
+        <div class="form-row-2">
+          <label>
+            <span>Danh mục</span>
+            <select id="newVideoCategory">
+              <option value="Lập trình & AI">Lập trình & AI</option>
+              <option value="Âm nhạc">Âm nhạc</option>
+              <option value="Review Tech">Review Tech</option>
+              <option value="Trò chơi">Trò chơi</option>
+              <option value="Podcast">Podcast</option>
+              <option value="Vlogs">Vlogs</option>
+            </select>
+          </label>
+          <label>
+            <span>Thời lượng</span>
+            <input id="newVideoDuration" type="text" value="12:45" placeholder="12:45" />
+          </label>
         </div>
-        <div class="cmd-grid">
-          <button class="cmd-chip" data-cmd="/plan">
-            <code>/plan</code>
-            <span>Lập kế hoạch</span>
-          </button>
-          <button class="cmd-chip" data-cmd="/compact">
-            <code>/compact</code>
-            <span>Nén bộ nhớ</span>
-          </button>
-          <button class="cmd-chip" data-cmd="test">
-            <code>test</code>
-            <span>Chạy kiểm thử</span>
-          </button>
-          <button class="cmd-chip" data-cmd="build">
-            <code>build</code>
-            <span>Đóng gói app</span>
-          </button>
+        <label>
+          <span>Mô tả ngắn</span>
+          <textarea id="newVideoDesc" rows="3" placeholder="Chia sẻ nội dung chính của video..."></textarea>
+        </label>
+        <div class="create-form-footer">
+          <button type="button" id="cancelCreateBtn" class="pill-btn-secondary">Hủy</button>
+          <button type="submit" class="pill-btn-primary">Xuất bản ngay</button>
         </div>
-      </div>
-    </section>
-  </main>
+      </form>
+    </div>
+  </div>
 
-  <footer class="footer">
-    <p>Antigravity Command Center • Deployed to <code>E:\AI_vin20k\hello-antigravity</code></p>
-  </footer>
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
 
   <script src="app.js"></script>
 </body>
