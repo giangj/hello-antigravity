@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Antigravity — AI-First Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Ambient Background Orbs -->
+  <div class="bg-ambient">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Top Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <span class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L2 19.5H7.5L12 11.5L16.5 19.5H22L12 2Z" fill="url(#logoGrad)" />
+            <circle cx="12" cy="17.5" r="2.2" fill="#38BDF8" />
+            <defs>
+              <linearGradient id="logoGrad" x1="2" y1="2" x2="22" y2="20" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#38BDF8" />
+                <stop offset="0.5" stop-color="#818CF8" />
+                <stop offset="1" stop-color="#C084FC" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        <span class="brand-name">Antigravity</span>
+        <span class="brand-badge">2.0</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#workspace" class="nav-link active">Command Center</a>
+        <a href="#agents" class="nav-link">Subagents</a>
+        <a href="#metrics" class="nav-link">Token Telemetry</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="status-pill">
+          <span class="pulse-dot"></span>
+          <span>Sandbox Ready</span>
+        </div>
+        <button id="themeBtn" class="btn-icon" title="Đổi hiệu ứng ánh sáng">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+        </button>
+        <a href="https://github.com/giangj/hello-antigravity" target="_blank" class="btn-primary-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span>GitHub Repo</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-tag">
+        <span class="sparkle">✦</span>
+        <span>Built by Antigravity for <strong>giangj</strong></span>
+      </div>
+      <h1 class="hero-title">
+        Điều phối <span class="gradient-text">Multi-Agent</span><br />
+        trong kỷ nguyên AI-First
+      </h1>
+      <p class="hero-subtitle">
+        Trung tâm giám sát tác vụ tự hành, quản lý ngữ cảnh thông minh và thử nghiệm câu lệnh trực tiếp ngay trên trình duyệt.
+      </p>
+
+      <div class="hero-cta">
+        <button id="runDemoBtn" class="btn-glow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <span>Chạy mô phỏng Agent</span>
+        </button>
+        <button id="compactBtn" class="btn-glass">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"></path>
+          </svg>
+          <span>/compact Ngữ cảnh</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Bento Grid Workspace -->
+    <section id="workspace" class="bento-grid">
+      <!-- Card 1: Interactive Terminal Agent -->
+      <div class="card card-terminal">
+        <div class="card-header">
+          <div class="window-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <span class="card-title-mono">agy-sandbox — E:\AI_vin20k\hello-antigravity</span>
+          <span class="badge-live">LIVE</span>
+        </div>
+        <div id="terminalBody" class="terminal-body">
+          <div class="term-line"><span class="prompt">$</span> <span class="cmd">git remote -v</span></div>
+          <div class="term-output">origin  https://github.com/giangj/hello-antigravity.git (fetch)</div>
+          <div class="term-output">origin  https://github.com/giangj/hello-antigravity.git (push)</div>
+          <div class="term-line"><span class="prompt">$</span> <span class="cmd">agy status --agents</span></div>
+          <div class="term-output success">✓ Coordinator Agent: Ready (Gemini Pro 2M Context)</div>
+          <div class="term-output info">● Subagent Pool: 3 workers standing by</div>
+        </div>
+        <div class="terminal-input-row">
+          <span class="prompt">❯</span>
+          <input id="cmdInput" type="text" placeholder="Thử gõ lệnh: help, /compact, build, test, clear..." autocomplete="off" />
+          <button id="sendCmdBtn" class="btn-send">Run</button>
+        </div>
+      </div>
+
+      <!-- Card 2: Token Telemetry & Context Meter -->
+      <div id="metrics" class="card card-metrics">
+        <div class="card-top">
+          <div>
+            <span class="eyebrow">TELEMETRY</span>
+            <h3 class="card-heading">Context Window Usage</h3>
+          </div>
+          <span id="tokenPercent" class="metric-big">42%</span>
+        </div>
+
+        <div class="progress-track">
+          <div id="tokenBar" class="progress-fill" style="width: 42%"></div>
+        </div>
+        <div class="metric-labels">
+          <span id="tokenCountText">840,000 / 2,000,000 tokens</span>
+          <span class="text-emerald">Tối ưu tốt</span>
+        </div>
+
+        <div class="mini-stats">
+          <div class="mini-stat-box">
+            <span class="stat-label">Window Reset</span>
+            <span id="countdownText" class="stat-val">04:59:12</span>
+          </div>
+          <div class="mini-stat-box">
+            <span class="stat-label">Active Model</span>
+            <span class="stat-val">Gemini Pro</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Subagents Orchestration -->
+      <div id="agents" class="card card-agents">
+        <div class="card-top">
+          <div>
+            <span class="eyebrow">MULTI-THREADING</span>
+            <h3 class="card-heading">Active Subagents</h3>
+          </div>
+          <span class="pill-count">1 Google Account</span>
+        </div>
+
+        <div class="agent-list">
+          <div class="agent-item">
+            <div class="agent-avatar sky">R</div>
+            <div class="agent-info">
+              <div class="agent-name">Research Agent</div>
+              <div class="agent-desc">Quét cấu trúc repository & docs</div>
+            </div>
+            <span class="agent-state done" data-agent="research">Idle</span>
+          </div>
+
+          <div class="agent-item">
+            <div class="agent-avatar purple">U</div>
+            <div class="agent-info">
+              <div class="agent-name">UI Architect</div>
+              <div class="agent-desc">Tạo giao diện HTML/CSS/JS tối ưu</div>
+            </div>
+            <span class="agent-state running" data-agent="ui">Active</span>
+          </div>
+
+          <div class="agent-item">
+            <div class="agent-avatar emerald">T</div>
+            <div class="agent-info">
+              <div class="agent-name">Git & Deploy Agent</div>
+              <div class="agent-desc">Commit & Push lên giangj/hello-antigravity</div>
+            </div>
+            <span class="agent-state done" data-agent="git">Synced</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Quick Actions / Slash Commands -->
+      <div class="card card-commands">
+        <div class="card-top">
+          <div>
+            <span class="eyebrow">WORKFLOWS</span>
+            <h3 class="card-heading">Slash Commands</h3>
+          </div>
+        </div>
+        <div class="cmd-grid">
+          <button class="cmd-chip" data-cmd="/plan">
+            <code>/plan</code>
+            <span>Lập kế hoạch</span>
+          </button>
+          <button class="cmd-chip" data-cmd="/compact">
+            <code>/compact</code>
+            <span>Nén bộ nhớ</span>
+          </button>
+          <button class="cmd-chip" data-cmd="test">
+            <code>test</code>
+            <span>Chạy kiểm thử</span>
+          </button>
+          <button class="cmd-chip" data-cmd="build">
+            <code>build</code>
+            <span>Đóng gói app</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Antigravity Command Center • Deployed to <code>E:\AI_vin20k\hello-antigravity</code></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
