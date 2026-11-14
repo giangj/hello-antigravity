@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>YouTube Shorts — Đơn Giản</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --card-bg: #181818;
+      --text-main: #f1f1f1;
+      --text-sub: #aaaaaa;
+      --accent: #ff0033;
+      --icon-hover: rgba(255, 255, 255, 0.15);
+      --badge-bg: rgba(255, 255, 255, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Roboto', 'Inter', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .shorts-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 50;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .shorts-header > * {
+      pointer-events: auto;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.05);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-title {
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .sound-toggle-btn {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: background 0.2s;
+    }
+
+    .sound-toggle-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Shorts Feed Container */
+    .shorts-feed {
+      flex: 1;
+      height: 100vh;
+      overflow-y: scroll;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .shorts-feed::-webkit-scrollbar {
+      display: none;
+    }
+    .shorts-feed {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Individual Shorts Slide */
+    .short-item {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      width: 100%;
+      max-width: 440px;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0;
+    }
+
+    .short-card {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 24px);
+      max-height: 840px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 500px) {
+      .short-item {
+        max-width: 100%;
+        padding: 0;
+      }
+      .short-card {
+        height: 100vh;
+        max-height: none;
+        border-radius: 0;
+      }
+    }
+
+    /* Canvas / Video Mockup */
+    .video-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .play-pause-indicator {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 10;
+    }
+
+    .play-pause-indicator.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Overlay Info (Bottom Left) */
+    .short-info-overlay {
+      position: absolute;
+      bottom: 16px;
+      left: 14px;
+      right: 74px;
+      z-index: 20;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .short-info-overlay > * {
+      pointer-events: auto;
+    }
+
+    .channel-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .channel-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 15px;
+      color: #fff;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      flex-shrink: 0;
+    }
+
+    .channel-handle {
+      font-weight: 600;
+      font-size: 14px;
+      color: #fff;
+      max-width: 160px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .subscribe-btn {
+      background: #fff;
+      color: #0f0f0f;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .subscribe-btn.subscribed {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    .subscribe-btn:hover {
+      transform: scale(1.04);
+    }
+
+    .short-title {
+      font-size: 14px;
+      line-height: 1.4;
+      font-weight: 400;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .short-tags {
+      color: #3ea6ff;
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .music-ticker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-top: 2px;
+    }
+
+    .vinyl-icon {
+      animation: spin 3.5s linear infinite;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Actions Column (Bottom Right) */
+    .short-actions {
+      position: absolute;
+      right: 10px;
+      bottom: 24px;
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .action-btn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .action-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.2s, color 0.2s;
+    }
+
+    .action-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+    }
+
+    .action-btn:active {
+      transform: scale(0.92);
+    }
+
+    .action-btn.liked {
+      color: #ff0033;
+    }
+
+    .action-btn.disliked {
+      color: #3ea6ff;
+    }
+
+    .action-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+
+    /* Progress bar */
+    .short-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 30;
+    }
+
+    .short-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.1s linear;
+    }
+
+    /* Desktop Navigation Floaters */
+    .desktop-nav {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      z-index: 40;
+    }
+
+    @media (max-width: 900px) {
+      .desktop-nav {
+        display: none;
+      }
+    }
+
+    .nav-arrow-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: rgba(30, 30, 30, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-arrow-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.08);
+    }
+
+    /* Comments Drawer / Modal */
+    .comments-drawer {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(100%);
+      width: 100%;
+      max-width: 440px;
+      height: 60vh;
+      background: #1e1e1e;
+      border-radius: 16px 16px 0 0;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .comments-drawer.open {
+      transform: translateX(-50%) translateY(0%);
+    }
+
+    .comments-header {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .comments-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .close-comments-btn {
+      background: none;
+      border: none;
+      color: var(--text-sub);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .comments-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .comment-item {
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .comment-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .comment-content {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: var(--text-sub);
+      font-size: 12px;
+    }
+
+    .comment-text {
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .comments-footer {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      gap: 10px;
+    }
+
+    .comment-input {
+      flex: 1;
+      background: #2a2a2a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .comment-input:focus {
+      border-color: #3ea6ff;
+    }
+
+    .comment-submit-btn {
+      background: #3ea6ff;
+      border: none;
+      color: #000;
+      font-weight: 600;
+      border-radius: 20px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(30, 30, 30, 0.95);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Overlay -->
+  <header class="shorts-header">
+    <div class="header-left">
+      <a href="index.html" class="back-btn" title="Quay lại YouTube chính">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+        </svg>
+      </a>
+      <div class="brand">
+        <div class="brand-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff">
+            <path d="M10 14.65v-5.3L15 12l-5 2.65z" />
+          </svg>
+        </div>
+        <span class="brand-title">Shorts</span>
+      </div>
+    </div>
+    <button id="soundToggleBtn" class="sound-toggle-btn" title="Bật/Tắt âm thanh">
+      <svg id="soundIcon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+      </svg>
+      <span id="soundLabel">Âm thanh: Tắt</span>
+    </button>
+  </header>
+
+  <!-- Desktop Up/Down Navigation Buttons -->
+  <aside class="desktop-nav">
+    <button id="navUpBtn" class="nav-arrow-btn" title="Video trước (Phím Mũi tên Lên)">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+        <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+      </svg>
+    </button>
+    <button id="navDownBtn" class="nav-arrow-btn" title="Video tiếp theo (Phím Mũi tên Xuống)">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+      </svg>
+    </button>
+  </aside>
+
+  <!-- Vertical Scroll Feed -->
+  <main id="shortsFeed" class="shorts-feed"></main>
+
+  <!-- Comments Drawer -->
+  <div id="commentsDrawer" class="comments-drawer">
+    <div class="comments-header">
+      <span class="comments-title">Bình luận (<span id="commentsCount">0</span>)</span>
+      <button id="closeCommentsBtn" class="close-comments-btn">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+      </button>
+    </div>
+    <div id="commentsBody" class="comments-body"></div>
+    <form id="commentForm" class="comments-footer">
+      <input id="commentInput" type="text" class="comment-input" placeholder="Thêm bình luận..." autocomplete="off" />
+      <button type="submit" class="comment-submit-btn">Gửi</button>
+    </form>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast">Đã sao chép liên kết</div>
+
+  <script>
+    // Danh sách dữ liệu YouTube Shorts
+    const SHORTS_DATA = [
+      {
+        id: 'short-1',
+        title: 'Khi AI Agent tự code 1 trang YouTube Shorts trong 10 giây 🚀✨',
+        tags: '#shorts #ai #antigravity #coding',
+        channel: 'Antigravity Studio',
+        handle: '@antigravity',
+        avatarColor: '#ff0055',
+        avatarText: 'AG',
+        views: '1.8M',
+        likes: 125400,
+        dislikes: 140,
+        music: 'Antigravity Beats • Cyber Lofi Vol. 1',
+        theme: ['#0f0c29', '#302b63', '#24243e'],
+        visualType: 'cyber-waves',
+        comments: [
+          { author: '@duy_dev', text: 'Nhìn mượt mà và trực quan quá bạn ơi!', time: '2 giờ trước' },
+          { author: '@tech_lover', text: 'Code thuần JS mà mượt thế này là đỉnh rồi!', time: '1 giờ trước' },
+          { author: '@minh_anh', text: 'Thích cái hiệu ứng chuyển cảnh ghê ❤️', time: '30 phút trước' }
+        ]
+      },
+      {
+        id: 'short-2',
+        title: 'Mẹo CSS 1 dòng làm giao diện chuẩn Mobile-first cực nhanh 📱💻',
+        tags: '#webdev #css #frontend #tips',
+        channel: 'Front-End Masters VN',
+        handle: '@frontend_vn',
+        avatarColor: '#3b82f6',
+        avatarText: 'FE',
+        views: '840K',
+        likes: 67200,
+        dislikes: 52,
+        music: 'Chill Coding • Synthwave Vibes',
+        theme: ['#051937', '#004d7a', '#008793'],
+        visualType: 'neon-grid',
+        comments: [
+          { author: '@dev_newbie', text: 'Áp dụng vào project ngay và luôn!', time: '3 giờ trước' },
+          { author: '@viet_code', text: 'Cảm ơn ad đã chia sẻ mẹo hay.', time: '1 giờ trước' }
+        ]
+      },
+      {
+        id: 'short-3',
+        title: 'Sound Test phím cơ Custom 60% gõ sướng tai cực kỳ 🎧⌨️',
+        tags: '#mechkey #customkeyboard #asmr #tech',
+        channel: 'Keyboard ASMR Lab',
+        handle: '@mechkey_vn',
+        avatarColor: '#10b981',
+        avatarText: 'KB',
+        views: '2.4M',
+        likes: 189000,
+        dislikes: 210,
+        music: 'Tapping Keys • Deep Thock Sound',
+        theme: ['#09203f', '#537895', '#000000'],
+        visualType: 'equalizer-pulse',
+        comments: [
+          { author: '@audio_geek', text: 'Tiếng thock nghe phê dã man 🤤', time: '5 giờ trước' },
+          { author: '@nam_pc', text: 'Xin tên switch với keycap ad ơi!', time: '4 giờ trước' }
+        ]
+      },
+      {
+        id: 'short-4',
+        title: 'Góc làm việc chuẩn Minimalist buổi tối nhìn cực chill ☕🌙',
+        tags: '#desksetup #minimalism #cozy #workspace',
+        channel: 'Cozy Workspace',
+        handle: '@cozy_desk',
+        avatarColor: '#f59e0b',
+        avatarText: 'CW',
+        views: '950K',
+        likes: 82000,
+        dislikes: 80,
+        music: 'Saigon Rain • Lofi Hip Hop Beat',
+        theme: ['#23074d', '#cc5333', '#11041a'],
+        visualType: 'starfield',
+        comments: [
+          { author: '@hoa_lan', text: 'Góc làm việc đáng mơ ước của mọi lập trình viên.', time: '1 ngày trước' }
+        ]
+      },
+      {
+        id: 'short-5',
+        title: '1 Pha xử lý highlight 0.1 giây né chiêu lật kèo thần thánh 🎮🔥',
+        tags: '#gaming #esports #highlight #clutch',
+        channel: 'Pro Gamer VN',
+        handle: '@progamer_vn',
+        avatarColor: '#8b5cf6',
+        avatarText: 'PG',
+        views: '3.1M',
+        likes: 245000,
+        dislikes: 310,
+        music: 'Epic Gaming Beats • Adrenaline Rush',
+        theme: ['#3a1c71', '#d76d77', '#ffaf7b'],
+        visualType: 'fire-particles',
+        comments: [
+          { author: '@game_thu', text: 'Pha đó tay phản xạ nhanh kinh khủng!', time: '2 ngày trước' }
+        ]
+      }
+    ];
+
+    // Trạng thái ứng dụng
+    const state = {
+      currentIndex: 0,
+      soundEnabled: false,
+      likedMap: {},
+      dislikedMap: {},
+      subscribedMap: {},
+      playingMap: {},
+      progressIntervals: {},
+      audioCtx: null
+    };
+
+    const feed = document.getElementById('shortsFeed');
+    const toast = document.getElementById('toast');
+    const commentsDrawer = document.getElementById('commentsDrawer');
+    const commentsBody = document.getElementById('commentsBody');
+    const commentsCount = document.getElementById('commentsCount');
+    const commentInput = document.getElementById('commentInput');
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundLabel = document.getElementById('soundLabel');
+    const soundIcon = document.getElementById('soundIcon');
+
+    // Khởi tạo âm thanh đơn giản (Web Audio API Synthesizer)
+    function playSynthBeat() {
+      if (!state.soundEnabled) return;
+      try {
+        if (!state.audioCtx) {
+          state.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (state.audioCtx.state === 'suspended') {
+          state.audioCtx.resume();
+        }
+        const osc = state.audioCtx.createOscillator();
+        const gain = state.audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220 + (state.currentIndex * 55), state.audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, state.audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, state.audioCtx.currentTime + 0.6);
+        osc.connect(gain);
+        gain.connect(state.audioCtx.destination);
+        osc.start();
+        osc.stop(state.audioCtx.currentTime + 0.6);
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    function formatNumber(num) {
+      if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+      if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+      return num;
+    }
+
+    // Render các thẻ Shorts
+    function renderShorts() {
+      feed.innerHTML = '';
+
+      SHORTS_DATA.forEach((item, index) => {
+        state.playingMap[index] = true;
+
+        const section = document.createElement('section');
+        section.className = 'short-item';
+        section.dataset.index = index;
+
+        section.innerHTML = `
+          <div class="short-card">
+            <canvas class="video-canvas" width="440" height="780"></canvas>
+            <div class="play-pause-indicator">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="#fff">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+
+            <!-- Overlay Info -->
+            <div class="short-info-overlay">
+              <div class="channel-row">
+                <div class="channel-avatar" style="background: ${item.avatarColor}">${item.avatarText}</div>
+                <span class="channel-handle">${item.handle}</span>
+                <button class="subscribe-btn" data-index="${index}">Đăng ký</button>
+              </div>
+              <p class="short-title">${item.title}</p>
+              <span class="short-tags">${item.tags}</span>
+              <div class="music-ticker">
+                <svg class="vinyl-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 12 7.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-5.5c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"/>
+                </svg>
+                <span>${item.music}</span>
+              </div>
+            </div>
+
+            <!-- Actions Sidebar -->
+            <div class="short-actions">
+              <div class="action-btn-wrap">
+                <button class="action-btn like-btn" data-index="${index}" title="Thích">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/>
+                  </svg>
+                </button>
+                <span class="action-label like-count">${formatNumber(item.likes)}</span>
+              </div>
+
+              <div class="action-btn-wrap">
+                <button class="action-btn dislike-btn" data-index="${index}" title="Không thích">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.58-6.59c.37-.36.59-.86.59-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/>
+                  </svg>
+                </button>
+                <span class="action-label">Không thích</span>
+              </div>
+
+              <div class="action-btn-wrap">
+                <button class="action-btn comment-btn" data-index="${index}" title="Bình luận">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                  </svg>
+                </button>
+                <span class="action-label">${item.comments.length}</span>
+              </div>
+
+              <div class="action-btn-wrap">
+                <button class="action-btn share-btn" data-index="${index}" title="Chia sẻ">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M14 9V5l7 7-7 7v-4.1c-5 0-8.5 1.6-11 5.1 1-5 4-10 11-11z"/>
+                  </svg>
+                </button>
+                <span class="action-label">Chia sẻ</span>
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="short-progress">
+              <div class="short-progress-fill"></div>
+            </div>
+          </div>
+        `;
+
+        feed.appendChild(section);
+        initCanvasAnimation(section, item, index);
+      });
+
+      setupInteractions();
+    }
+
+    // Hiệu ứng Canvas động cho video ngắn
+    function initCanvasAnimation(section, item, index) {
+      const canvas = section.querySelector('.video-canvas');
+      const ctx = canvas.getContext('2d');
+      const [c1, c2, c3] = item.theme;
+
+      let step = 0;
+      function render() {
+        if (!state.playingMap[index]) {
+          requestAnimationFrame(render);
+          return;
+        }
+
+        step += 0.02;
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Gradient Background
+        const grad = ctx.createLinearGradient(0, 0, w, h);
+        grad.addColorStop(0, c1);
+        grad.addColorStop(0.5, c2);
+        grad.addColorStop(1, c3);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        // Animated Visual Elements
+        ctx.save();
+        if (item.visualType === 'cyber-waves') {
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.lineWidth = 2.5;
+          for (let j = 0; j < 5; j++) {
+            ctx.beginPath();
+            for (let x = 0; x < w; x += 10) {
+              const y = (h * 0.45) + Math.sin(x * 0.015 + step + j * 0.8) * (35 + j * 8);
+              if (x === 0) ctx.moveTo(x, y);
+              else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+          }
+        } else if (item.visualType === 'neon-grid') {
+          ctx.strokeStyle = 'rgba(59, 130, 246, 0.3)';
+          ctx.lineWidth = 1.5;
+          const gridSize = 35;
+          const offsetY = (step * 25) % gridSize;
+          for (let x = 0; x <= w; x += gridSize) {
+            ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+          }
+          for (let y = offsetY; y <= h; y += gridSize) {
+            ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+          }
+        } else if (item.visualType === 'equalizer-pulse') {
+          const bars = 18;
+          const barW = 12;
+          const spacing = 8;
+          const startX = (w - (bars * (barW + spacing))) / 2;
+          for (let i = 0; i < bars; i++) {
+            const barH = 30 + Math.abs(Math.sin(step * 3 + i * 0.5)) * 140;
+            const barY = (h * 0.45) - barH / 2;
+            ctx.fillStyle = `rgba(16, 185, 129, ${0.4 + (barH / 200)})`;
+            ctx.fillRect(startX + i * (barW + spacing), barY, barW, barH);
+          }
+        } else if (item.visualType === 'starfield') {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+          for (let s = 0; s < 40; s++) {
+            const sx = (Math.sin(s * 99 + step * 0.2) * 0.5 + 0.5) * w;
+            const sy = (Math.cos(s * 77 + step * 0.3) * 0.5 + 0.5) * h;
+            const size = (Math.sin(s + step * 2) * 0.5 + 0.5) * 3 + 1;
+            ctx.beginPath();
+            ctx.arc(sx, sy, size, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        } else {
+          // Fire / Energy particles
+          for (let p = 0; p < 25; p++) {
+            const px = w * 0.5 + Math.sin(step * 2 + p) * 110;
+            const py = (h * 0.6) - ((step * 60 + p * 30) % (h * 0.4));
+            ctx.fillStyle = `rgba(255, 110, 80, ${Math.max(0, 1 - (h * 0.6 - py) / (h * 0.4))})`;
+            ctx.beginPath();
+            ctx.arc(px, py, 6 + (p % 6), 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        // Center YouTube Shorts Emblem
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.font = '700 24px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('SHORTS', w / 2, h * 0.42);
+
+        ctx.restore();
+
+        // Update progress bar
+        const progressFill = section.querySelector('.short-progress-fill');
+        if (progressFill) {
+          const pct = ((step * 15) % 100);
+          progressFill.style.width = pct + '%';
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    // Thiết lập các tương tác người dùng
+    function setupInteractions() {
+      // Intersection Observer để biết short nào đang active
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const idx = parseInt(entry.target.dataset.index, 10);
+          if (entry.isIntersecting) {
+            state.currentIndex = idx;
+            state.playingMap[idx] = true;
+            playSynthBeat();
+          }
+        });
+      }, { threshold: 0.65 });
+
+      document.querySelectorAll('.short-item').forEach(item => observer.observe(item));
+
+      // Play / Pause khi bấm vào video
+      document.querySelectorAll('.short-card').forEach((card, idx) => {
+        const indicator = card.querySelector('.play-pause-indicator');
+        card.querySelector('.video-canvas').addEventListener('click', () => {
+          state.playingMap[idx] = !state.playingMap[idx];
+          if (!state.playingMap[idx]) {
+            indicator.innerHTML = `<svg viewBox="0 0 24 24" width="40" height="40" fill="#fff"><path d="M8 5v14l11-7z"/></svg>`;
+            indicator.classList.add('show');
+          } else {
+            indicator.innerHTML = `<svg viewBox="0 0 24 24" width="40" height="40" fill="#fff"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+            indicator.classList.add('show');
+            setTimeout(() => indicator.classList.remove('show'), 400);
+          }
+        });
+      });
+
+      // Like Button
+      document.querySelectorAll('.like-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = btn.dataset.index;
+          const countSpan = btn.parentElement.querySelector('.like-count');
+          const item = SHORTS_DATA[idx];
+
+          if (state.likedMap[idx]) {
+            delete state.likedMap[idx];
+            btn.classList.remove('liked');
+            countSpan.textContent = formatNumber(item.likes);
+          } else {
+            state.likedMap[idx] = true;
+            btn.classList.add('liked');
+            // gỡ dislike nếu có
+            const dislikeBtn = btn.closest('.short-actions').querySelector('.dislike-btn');
+            dislikeBtn.classList.remove('disliked');
+            delete state.dislikedMap[idx];
+            countSpan.textContent = formatNumber(item.likes + 1);
+            showToast('Đã thêm vào Video đã thích');
+          }
+        });
+      });
+
+      // Dislike Button
+      document.querySelectorAll('.dislike-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = btn.dataset.index;
+          if (state.dislikedMap[idx]) {
+            delete state.dislikedMap[idx];
+            btn.classList.remove('disliked');
+          } else {
+            state.dislikedMap[idx] = true;
+            btn.classList.add('disliked');
+            const likeBtn = btn.closest('.short-actions').querySelector('.like-btn');
+            const countSpan = likeBtn.parentElement.querySelector('.like-count');
+            likeBtn.classList.remove('liked');
+            delete state.likedMap[idx];
+            countSpan.textContent = formatNumber(SHORTS_DATA[idx].likes);
+            showToast('Đã ghi nhận phản hồi');
+          }
+        });
+      });
+
+      // Subscribe Button
+      document.querySelectorAll('.subscribe-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = btn.dataset.index;
+          if (state.subscribedMap[idx]) {
+            delete state.subscribedMap[idx];
+            btn.classList.remove('subscribed');
+            btn.textContent = 'Đăng ký';
+            showToast('Đã hủy đăng ký kênh');
+          } else {
+            state.subscribedMap[idx] = true;
+            btn.classList.add('subscribed');
+            btn.textContent = 'Đã đăng ký';
+            showToast('Đã đăng ký kênh thành công 🎉');
+          }
+        });
+      });
+
+      // Share Button
+      document.querySelectorAll('.share-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href);
+          }
+          showToast('Đã sao chép liên kết Shorts!');
+        });
+      });
+
+      // Comments Button
+      document.querySelectorAll('.comment-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const idx = parseInt(btn.dataset.index, 10);
+          openComments(idx);
+        });
+      });
+    }
+
+    // Comments Modal
+    let activeCommentIndex = 0;
+    function openComments(idx) {
+      activeCommentIndex = idx;
+      const item = SHORTS_DATA[idx];
+      commentsCount.textContent = item.comments.length;
+      renderCommentsList();
+      commentsDrawer.classList.add('open');
+    }
+
+    function renderCommentsList() {
+      const item = SHORTS_DATA[activeCommentIndex];
+      commentsBody.innerHTML = '';
+      item.comments.forEach(c => {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        div.innerHTML = `
+          <div class="comment-avatar">${c.author.substring(1, 3).toUpperCase()}</div>
+          <div class="comment-content">
+            <span class="comment-author">${c.author} • ${c.time || 'vừa xong'}</span>
+            <p class="comment-text">${c.text}</p>
+          </div>
+        `;
+        commentsBody.appendChild(div);
+      });
+      commentsBody.scrollTop = commentsBody.scrollHeight;
+    }
+
+    document.getElementById('closeCommentsBtn').addEventListener('click', () => {
+      commentsDrawer.classList.remove('open');
+    });
+
+    document.getElementById('commentForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = commentInput.value.trim();
+      if (!val) return;
+      SHORTS_DATA[activeCommentIndex].comments.push({
+        author: '@ban_la_nhat',
+        text: val,
+        time: 'Vừa xong'
+      });
+      commentInput.value = '';
+      commentsCount.textContent = SHORTS_DATA[activeCommentIndex].comments.length;
+      renderCommentsList();
+      showToast('Đã gửi bình luận');
+    });
+
+    // Sound Toggle
+    soundToggleBtn.addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      if (state.soundEnabled) {
+        soundLabel.textContent = 'Âm thanh: Bật';
+        soundIcon.innerHTML = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>`;
+        playSynthBeat();
+        showToast('Đã bật hiệu ứng âm thanh');
+      } else {
+        soundLabel.textContent = 'Âm thanh: Tắt';
+        soundIcon.innerHTML = `<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>`;
+        showToast('Đã tắt âm thanh');
+      }
+    });
+
+    // Desktop Nav Controls (Next / Prev)
+    function scrollToShort(idx) {
+      if (idx < 0 || idx >= SHORTS_DATA.length) return;
+      const target = document.querySelector(`.short-item[data-index="${idx}"]`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    document.getElementById('navUpBtn').addEventListener('click', () => {
+      scrollToShort(state.currentIndex - 1);
+    });
+
+    document.getElementById('navDownBtn').addEventListener('click', () => {
+      scrollToShort(state.currentIndex + 1);
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        scrollToShort(state.currentIndex + 1);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        scrollToShort(state.currentIndex - 1);
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        const cur = state.currentIndex;
+        state.playingMap[cur] = !state.playingMap[cur];
+      } else if (e.key === 'm' || e.key === 'M') {
+        soundToggleBtn.click();
+      }
+    });
+
+    // Khởi chạy
+    renderShorts();
+  </script>
+</body>
+</html>
